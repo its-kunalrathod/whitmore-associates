@@ -3,11 +3,11 @@
   "name": "whitmore-associates",
   "routes": [
     {
-      "src": "/dashboard",
+      "src": "/dashboard/?$",
       "dest": "/dashboard/index.html"
     },
     {
-      "src": "/dashboard/(.*)",
+      "src": "/dashboard/(.+)",
       "dest": "/dashboard/index.html"
     }
   ],
