@@ -796,8 +796,16 @@
     </div>
 
     <script>
+        const sidebar = document.getElementById('sidebar');
         document.getElementById('mobileToggle').addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('open');
+            sidebar.classList.toggle('open');
+        });
+        sidebar.querySelectorAll('.nav-item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('open');
+                }
+            });
         });
     </script>
 </body>

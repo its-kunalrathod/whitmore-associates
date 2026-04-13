@@ -2,8 +2,8 @@
     "use strict";
     
     const CONFIG = {
-        N8N_WEBHOOK_URL: "https://your-n8n-instance.com/webhook/chat-assistant",
-        CALENDLY_LINK: "https://calendly.com/whitmore-associates/consultation",
+        N8N_WEBHOOK_URL: "https://n8n-i9k0.srv1519780.hstgr.cloud/webhook/intake-chat",
+        CALENDLY_LINK: "https://calendly.com/its-kunalrathod/30min",
         COMPANY_NAME: "Whitmore & Associates",
         COMPANY_SUBTITLE: "New Client Enquiry"
     };
