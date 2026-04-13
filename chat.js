@@ -2,7 +2,7 @@
     "use strict";
     
     const CONFIG = {
-        N8N_WEBHOOK_URL: "https://n8n-i9k0.srv1519780.hstgr.cloud/webhook-test/intake-chat",
+        N8N_WEBHOOK_URL: "https://n8n-i9k0.srv1519780.hstgr.cloud/webhook/whitmore-intake",
         CALENDLY_LINK: "https://calendly.com/its-kunalrathod/30min",
         COMPANY_NAME: "Whitmore & Associates",
         COMPANY_SUBTITLE: "New Client Enquiry"
