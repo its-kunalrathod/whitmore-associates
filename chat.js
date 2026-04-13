@@ -346,9 +346,10 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     message: userMessage,
-                    sessionId: state.sessionId,
-                    timestamp: new Date().toISOString(),
-                    history: state.conversationHistory
+                    session_id: state.sessionId,
+                    conversation_history: state.conversationHistory,
+                    source: "chat",
+                    timestamp: new Date().toISOString()
                 })
             })
             .then(function(r) { return r.json(); })
