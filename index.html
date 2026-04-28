@@ -1,12 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- Primary Meta Tags -->
     <title>Whitmore & Associates | Strategic Accounting & Advisory</title>
+    <meta name="description" content="Whitmore & Associates — Award-winning UK chartered accountants specialising in Tax Planning, CFO Advisory, Compliance and Bookkeeping. 37 years experience. ICAEW registered.">
+    <meta name="keywords" content="chartered accountants, UK accounting, tax planning, CFO advisory, bookkeeping, compliance, London accountants">
+    <meta name="author" content="Whitmore & Associates">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://whitmore-associates.vercel.app/">
+    <meta property="og:title" content="Whitmore & Associates | Strategic Accounting & Advisory">
+    <meta property="og:description" content="Award-winning UK chartered accountants specialising in Tax Planning, CFO Advisory, Compliance and Bookkeeping. 37 years experience.">
+    <meta property="og:image" content="https://whitmore-associates.vercel.app/og-image.jpg">
+    <meta property="og:locale" content="en_GB">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://whitmore-associates.vercel.app/">
+    <meta property="twitter:title" content="Whitmore & Associates | Strategic Accounting & Advisory">
+    <meta property="twitter:description" content="Award-winning UK chartered accountants specialising in Tax Planning, CFO Advisory, Compliance and Bookkeeping.">
+    <meta property="twitter:image" content="https://whitmore-associates.vercel.app/og-image.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23c9a227' rx='15' width='100' height='100'/><text x='50' y='68' font-family='serif' font-size='50' font-weight='bold' text-anchor='middle' fill='%230f172a'>W</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23c9a227' rx='30' width='180' height='180'/><text x='90' y='122' font-family='serif' font-size='90' font-weight='bold' text-anchor='middle' fill='%230f172a'>W</text></svg>">
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root{--navy:#0f172a;--navy-light:#1e293b;--gold:#c9a227;--gold-light:#d4b43a;--white:#fff;--cream:#faf9f7;--gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;--gray-300:#cbd5e1;--gray-400:#94a3b8;--gray-500:#64748b;--gray-600:#475569;--gray-700:#334155;--success:#10b981;--warning:#f59e0b;--shadow-sm:0 1px 2px rgba(15,23,42,.05);--shadow:0 1px 3px rgba(15,23,42,.1);--shadow-md:0 4px 6px -1px rgba(15,23,42,.1);--shadow-lg:0 10px 15px -3px rgba(15,23,42,.1);--shadow-xl:0 20px 25px -5px rgba(15,23,42,.1);--transition:all .3s cubic-bezier(.4,0,.2,1);--radius:8px;--radius-lg:12px;--radius-xl:16px}
         *{margin:0;padding:0;box-sizing:border-box}
@@ -16,6 +45,30 @@
         a{text-decoration:none;color:inherit;transition:var(--transition)}
         .container{width:100%;max-width:1280px;margin:0 auto;padding:0 24px}
         
+        /* Trust Banner */
+        .trust-banner { position: fixed; top: 0; left: 0; right: 0; background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%); color: var(--navy); padding: 12px 20px; z-index: 10000; font-size: 0.875rem; font-weight: 600; text-align: center; transform: translateY(0); transition: transform 0.3s ease; }
+        .trust-banner.hidden { transform: translateY(-100%); }
+        .trust-banner-content { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+        .trust-banner-close { background: rgba(15,23,42,0.15); border: none; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.125rem; color: var(--navy); transition: all 0.2s ease; }
+        .trust-banner-close:hover { background: rgba(15,23,42,0.25); transform: rotate(90deg); }
+        body.has-trust-banner { padding-top: 48px; }
+        body.has-trust-banner .navbar { top: 48px; }
+        
+        /* Cookie Consent */
+        .cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; background: var(--navy); color: var(--white); padding: 20px 24px; z-index: 9998; transform: translateY(100%); transition: transform 0.4s cubic-bezier(.4,0,.2,1); box-shadow: 0 -4px 20px rgba(0,0,0,0.2); }
+        .cookie-banner.show { transform: translateY(0); }
+        .cookie-content { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+        .cookie-text { font-size: 0.9375rem; line-height: 1.6; flex: 1; min-width: 280px; }
+        .cookie-text a { color: var(--gold); text-decoration: underline; }
+        .cookie-text a:hover { color: var(--gold-light); }
+        .cookie-buttons { display: flex; gap: 12px; flex-shrink: 0; }
+        .cookie-btn { padding: 12px 24px; border-radius: 9999px; font-family: inherit; font-size: 0.9375rem; font-weight: 600; cursor: pointer; transition: all 0.25s ease; border: none; }
+        .cookie-btn-accept { background: var(--gold); color: var(--navy); }
+        .cookie-btn-accept:hover { background: var(--gold-light); transform: translateY(-2px); }
+        .cookie-btn-decline { background: transparent; color: var(--white); border: 1.5px solid rgba(255,255,255,0.3); }
+        .cookie-btn-decline:hover { border-color: var(--gold); color: var(--gold); }
+        
+        /* Navbar */
         .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:24px 0;background:transparent;transition:var(--transition)}
         .navbar.scrolled{background:rgba(255,255,255,.98);backdrop-filter:blur(20px);box-shadow:var(--shadow-md);padding:14px 0}
         .nav-container{display:flex;align-items:center;justify-content:space-between;max-width:1280px;margin:0 auto;padding:0 32px}
@@ -25,7 +78,7 @@
         .logo:hover .logo-icon{box-shadow:0 6px 20px rgba(201,162,39,.4)}
         .logo-text{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;color:var(--white);letter-spacing:-0.01em}
         .navbar.scrolled .logo-text{color:var(--navy)}
-        .nav-menu{display:flex;align-items:center;gap:4px}
+        .nav-menu{display:flex;align-items:center;gap:4px;list-style:none}
         .nav-link{font-size:.9375rem;font-weight:500;color:rgba(255,255,255,.85);padding:10px 18px;border-radius:var(--radius);transition:all .2s ease;position:relative}
         .nav-link:hover{color:var(--white);background:rgba(255,255,255,.08)}
         .nav-link:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
@@ -86,6 +139,16 @@
         .stat-label{font-size:.875rem;color:rgba(255,255,255,.55);margin-top:12px;text-transform:uppercase;letter-spacing:.12em;font-weight:500}
         .stat-divider{width:1px;height:70px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.15),transparent)}
         
+        /* Trusted By Section */
+        .trusted-section{padding:80px 0;background:var(--white);border-bottom:1px solid var(--gray-200)}
+        .trusted-header{text-align:center;margin-bottom:48px}
+        .trusted-header p{font-size:.875rem;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.15em}
+        .trusted-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:24px;align-items:center}
+        .trusted-logo{display:flex;align-items:center;justify-content:center;height:80px;background:var(--gray-50);border-radius:var(--radius-lg);border:1.5px solid var(--gray-200);transition:all .3s ease}
+        .trusted-logo:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.08)}
+        .trusted-logo span{font-size:.9375rem;font-weight:600;color:var(--gray-500);letter-spacing:-0.01em}
+        .trusted-logo:hover span{color:var(--navy)}
+        
         .services-section{padding:140px 0;background:var(--white);position:relative}
         .services-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--gray-200),transparent)}
         .section-header{text-align:center;margin-bottom:72px}
@@ -117,6 +180,25 @@
         .service-card.featured .service-link{color:var(--gold)}
         .service-link:hover{gap:12px}
         
+        /* Case Studies Section */
+        .cases-section{padding:140px 0;background:linear-gradient(to bottom,var(--cream) 0,var(--white) 100%);position:relative}
+        .cases-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--gray-200),transparent)}
+        .cases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+        .case-card{background:var(--white);border:1.5px solid var(--gray-200);border-radius:var(--radius-xl);padding:40px;transition:all .35s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+        .case-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold) 0,var(--gold-light) 100%);transform:scaleX(0);transition:transform .35s ease}
+        .case-card:hover::before{transform:scaleX(1)}
+        .case-card:hover{border-color:var(--gold);transform:translateY(-6px);box-shadow:0 24px 48px -12px rgba(15,23,42,.12)}
+        .case-tag{display:inline-block;font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);padding:6px 12px;background:rgba(201,162,39,.08);border-radius:9999px;margin-bottom:20px}
+        .case-card h3{font-size:1.375rem;margin-bottom:16px;color:var(--navy)}
+        .case-challenge{margin-bottom:20px}
+        .case-challenge-label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-500);margin-bottom:6px}
+        .case-challenge-text{font-size:.9375rem;color:var(--gray-600);line-height:1.6}
+        .case-result{background:linear-gradient(135deg,#f5f0e1 0,#faf9f7 100%);border-radius:var(--radius-lg);padding:20px;margin-bottom:20px;border:1.5px solid rgba(201,162,39,.2)}
+        .case-result-value{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--navy);line-height:1}
+        .case-result-label{font-size:.75rem;color:var(--gray-500);margin-top:6px;font-weight:500}
+        .case-timeframe{display:flex;align-items:center;gap:8px;font-size:.875rem;color:var(--gray-500)}
+        .case-timeframe svg{color:var(--gold)}
+        
         .why-section{padding:140px 0;background:linear-gradient(to bottom,var(--cream) 0,var(--white) 100%);position:relative;overflow:hidden}
         .why-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--gray-200),transparent)}
         .why-grid{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center}
@@ -144,6 +226,23 @@
         .badge-icon{width:48px;height:48px;background:linear-gradient(135deg,var(--gold) 0,var(--gold-light) 100%);color:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;box-shadow:0 4px 16px rgba(201,162,39,.35)}
         .badge-value{display:block;font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:700;color:var(--navy);line-height:1}
         .badge-label{font-size:.75rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+        
+        /* FAQ Section */
+        .faq-section{padding:140px 0;background:var(--white);position:relative}
+        .faq-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--gray-200),transparent)}
+        .faq-grid{max-width:800px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+        .faq-item{background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:var(--radius-xl);overflow:hidden;transition:all .3s ease}
+        .faq-item:hover{border-color:var(--gray-300)}
+        .faq-item.active{background:var(--white);border-color:var(--gold);box-shadow:0 8px 24px rgba(0,0,0,.06)}
+        .faq-question{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px 28px;background:none;border:none;cursor:pointer;text-align:left;font-family:inherit}
+        .faq-question h4{font-size:1.125rem;font-weight:600;color:var(--navy);letter-spacing:-0.01em;flex:1}
+        .faq-icon{width:32px;height:32px;background:var(--white);border:1.5px solid var(--gray-200);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .3s ease;flex-shrink:0}
+        .faq-icon svg{width:16px;height:16px;color:var(--gray-500);transition:all .3s ease}
+        .faq-item.active .faq-icon{background:var(--gold);border-color:var(--gold)}
+        .faq-item.active .faq-icon svg{color:var(--navy);transform:rotate(180deg)}
+        .faq-answer{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
+        .faq-answer-content{padding:0 28px 24px;font-size:1rem;color:var(--gray-600);line-height:1.7}
+        .faq-item.active .faq-answer{max-height:300px}
         
         .industries-section{padding:120px 0;background:var(--white);position:relative}
         .industries-section::before{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--gray-200),transparent)}
@@ -174,15 +273,27 @@
         .form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
         .form-group{display:flex;flex-direction:column;gap:10px}
         .form-group label{font-size:.875rem;font-weight:600;color:var(--navy);letter-spacing:-0.01em}
+        .form-group label .required{color:var(--gold);margin-left:2px}
         .form-group input,.form-group select,.form-group textarea{padding:16px 20px;border:1.5px solid var(--gray-200);border-radius:var(--radius-lg);font-family:'Inter',sans-serif;font-size:1rem;transition:all .25s ease;color:var(--navy);background:var(--white)}
         .form-group input::placeholder,.form-group textarea::placeholder{color:var(--gray-400)}
         .form-group input:hover,.form-group select:hover,.form-group textarea:hover{border-color:var(--gray-300)}
         .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(201,162,39,.12),0 4px 12px rgba(201,162,39,.08)}
         .form-group textarea{resize:vertical;min-height:140px;line-height:1.6}
+        .form-group input.error,.form-group select.error,.form-group textarea.error{border-color:#ef4444;box-shadow:0 0 0 4px rgba(239,68,68,.1)}
+        .form-error{font-size:.8125rem;color:#ef4444;margin-top:4px;display:none}
+        .form-error.show{display:block}
         .select-wrapper{position:relative}
         .select-wrapper select{width:100%;appearance:none;cursor:pointer;padding-right:48px}
         .select-arrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--gray-500);pointer-events:none;transition:color .25s ease}
         .form-group select:focus+.select-arrow{color:var(--gold)}
+        .form-submit-wrapper{position:relative}
+        .form-success,.form-error-message{text-align:center;padding:16px;border-radius:var(--radius-lg);font-size:.9375rem;font-weight:500;display:none}
+        .form-success{background:rgba(16,185,129,.1);color:#059669;border:1.5px solid rgba(16,185,129,.2)}
+        .form-error-message{background:rgba(239,68,68,.1);color:#dc2626;border:1.5px solid rgba(239,68,68,.2)}
+        .form-success.show,.form-error-message.show{display:block}
+        .btn-loading{position:relative;color:transparent!important}
+        .btn-loading::after{content:'';position:absolute;width:20px;height:20px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin 0.8s linear infinite;left:50%;top:50%;transform:translate(-50%,-50%)}
+        @keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
         
         .footer{background:linear-gradient(180deg,#0a0f1f 0,#020617 100%);color:var(--white);position:relative}
         .footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(201,162,39,.3),transparent)}
@@ -197,7 +308,7 @@
         .credential{font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);padding:8px 14px;background:rgba(201,162,39,.08);border:1.5px solid rgba(201,162,39,.25);border-radius:9999px;transition:all .25s ease}
         .credential:hover{background:rgba(201,162,39,.15);border-color:rgba(201,162,39,.4)}
         .footer-links h4{font-family:'Inter',sans-serif;font-size:.8125rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:28px;color:var(--white)}
-        .footer-links ul{display:flex;flex-direction:column;gap:14px}
+        .footer-links ul{display:flex;flex-direction:column;gap:14px;list-style:none}
         .footer-links a{font-size:.9375rem;color:rgba(255,255,255,.55);transition:all .25s ease;display:inline-block;position:relative}
         .footer-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1.5px;background:var(--gold);transition:width .3s ease}
         .footer-links a:hover{color:var(--gold);padding-left:0}
@@ -212,21 +323,40 @@
         .footer-social a:hover svg{transform:scale(1.1)}
         
         
-        @media(max-width:1200px){.services-grid{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1fr 1fr;gap:40px}}
-        @media(max-width:1100px){.services-grid{gap:24px}.service-card{padding:40px 36px}.service-card h3{font-size:1.5rem}}
-        @media(max-width:992px){.nav-toggle{display:flex;align-items:center;justify-content:center;width:44px;height:44px}.nav-menu{position:fixed;top:0;right:-100%;width:85%;max-width:380px;height:100vh;background:var(--white);flex-direction:column;padding:100px 32px 40px;transition:all .35s cubic-bezier(.4,0,.2,1);box-shadow:-10px 0 40px rgba(15,23,42,.15);border-left:1px solid var(--gray-200)}.nav-menu.active{right:0}.nav-link{color:var(--navy);font-size:1.125rem;padding:14px 0;width:100%;border-bottom:1px solid var(--gray-100);border-radius:0}.nav-link:hover{background:none;padding-left:12px;color:var(--gold)}.nav-link:last-of-type{border-bottom:none}.nav-cta{margin:24px 0 0;text-align:center;width:100%;display:flex;justify-content:center}.why-grid,.contact-grid{grid-template-columns:1fr;gap:60px}.why-grid{gap:80px}.why-visual{order:-1}.visual-quote-card{padding:48px}.floating-badge{position:relative;bottom:auto;right:auto;margin:24px auto 0;width:fit-content}.industries-section{padding:100px 0}.industries-grid{grid-template-columns:repeat(3,1fr);gap:16px}.industry-card{padding:28px 16px}.industry-icon{font-size:2.25rem}.contact-section{padding:100px 0}.contact-grid{gap:60px}.contact-form-wrapper{padding:48px}.footer-grid{grid-template-columns:1fr 1fr;gap:48px 40px}.footer-brand{grid-column:1/-1}.footer-tagline{max-width:100%}.stat-divider{display:none}.stats-bar{padding:56px 0}.stats-grid{gap:40px}.stat-value{font-size:2.75rem}.stat-item{padding:12px 16px}}
-        @media(max-width:768px){.why-section{padding:100px 0}.why-grid{gap:60px}.why-lead{font-size:1.125rem;margin-bottom:32px}.feature{padding:20px;gap:16px}.feature:hover{transform:translateX(6px)}.feature-icon{width:48px;height:48px}.feature-content h4{font-size:1.125rem}.visual-quote-card{padding:36px 28px}.visual-quote-card blockquote{font-size:1.25rem;margin-bottom:28px}.quote-mark{font-size:5rem;top:16px;left:24px}.quote-author{padding-top:24px}.author-avatar{width:52px;height:52px;font-size:1.125rem}.industries-section{padding:80px 0}.industries-grid{grid-template-columns:repeat(2,1fr);gap:14px}.industry-card{padding:24px 16px}.industry-icon{font-size:2rem;margin-bottom:12px}.contact-section{padding:80px 0}.contact-lead{font-size:1.0625rem;margin-bottom:36px}.contact-details{gap:16px}.contact-item{padding:16px;gap:16px}.contact-icon{width:48px;height:48px}.contact-form-wrapper{padding:36px 28px}.form-row{grid-template-columns:1fr;gap:20px}.form-group input,.form-group select,.form-group textarea{padding:14px 16px}.services-section{padding:100px 0}.services-grid{grid-template-columns:1fr;gap:20px}.service-card{padding:36px 28px}.service-card h3{font-size:1.375rem}.service-icon{width:60px;height:60px}.service-badge{top:20px;right:20px;padding:6px 12px;font-size:.625rem}.hero{padding:140px 0 80px}.hero-title{font-size:clamp(2.25rem,8vw,3rem);letter-spacing:-.02em}.hero-badge{font-size:.75rem;padding:8px 16px;margin-bottom:28px}.hero-description{font-size:1.0625rem;line-height:1.7;margin-bottom:36px}.hero-cta{flex-direction:column;width:100%;gap:14px;margin-bottom:40px}.hero-cta .btn{width:100%;padding:16px 28px;font-size:1rem}.hero-trust{flex-direction:column;gap:16px;padding:20px 24px}.trust-avatars .avatar{width:44px;height:44px;font-size:.875rem}.footer-top{padding:72px 0 56px}.footer-grid{grid-template-columns:1fr;gap:40px}.footer-brand{grid-column:auto}.footer-links h4{margin-bottom:20px}.footer-bottom-content{flex-direction:column;gap:20px;text-align:center}.floating-badge{position:relative;bottom:auto;right:auto;margin-top:30px;justify-content:center}}
-        @media(max-width:480px){.services-section,.why-section,.contact-section{padding:80px 0}.container{padding:0 20px}.nav-container{padding:0 20px}.logo-icon{width:40px;height:40px;font-size:1.5rem}.logo-text{font-size:1.25rem}.nav-menu{width:90%;max-width:none;padding:90px 24px 32px}.section-header{margin-bottom:48px}.section-title{font-size:1.875rem}.section-subtitle{font-size:1rem}.service-card{padding:32px 24px}.service-card h3{font-size:1.25rem}.service-card p{font-size:1rem}.feature{flex-direction:column;gap:16px;text-align:center}.feature-icon{margin:0 auto}.feature:hover{transform:translateY(-4px)}.visual-quote-card{padding:32px 24px}.visual-quote-card blockquote{font-size:1.125rem}.quote-mark{font-size:4rem}.quote-author{flex-direction:column;text-align:center;gap:12px}.contact-section{padding:72px 0}.contact-form-wrapper{padding:28px 22px;border-radius:var(--radius-lg)}.contact-form{gap:20px}.contact-item:hover{transform:translateX(4px)}.footer-top{padding:60px 0 48px}.footer-grid{gap:32px}.footer-bottom{padding:24px 0}.hero-title{font-size:2rem}.stat-value{font-size:2rem}}
+        @media(max-width:1200px){.services-grid{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1fr 1fr;gap:40px}.cases-grid{grid-template-columns:repeat(2,1fr)}.trusted-grid{grid-template-columns:repeat(3,1fr)}}
+        @media(max-width:1100px){.services-grid{gap:24px}.service-card{padding:40px 36px}.service-card h3{font-size:1.5rem}.cases-grid{gap:24px}.case-card{padding:32px}}
+        @media(max-width:992px){.nav-toggle{display:flex;align-items:center;justify-content:center;width:44px;height:44px}.nav-menu{position:fixed;top:0;right:-100%;width:85%;max-width:380px;height:100vh;background:var(--white);flex-direction:column;padding:100px 32px 40px;transition:all .35s cubic-bezier(.4,0,.2,1);box-shadow:-10px 0 40px rgba(15,23,42,.15);border-left:1px solid var(--gray-200);z-index:1001}.nav-menu.active{right:0}.nav-link{color:var(--navy);font-size:1.125rem;padding:14px 0;width:100%;border-bottom:1px solid var(--gray-100);border-radius:0}.nav-link:hover{background:none;padding-left:12px;color:var(--gold)}.nav-link:last-of-type{border-bottom:none}.nav-cta{margin:24px 0 0;text-align:center;width:100%;display:flex;justify-content:center}.why-grid,.contact-grid{grid-template-columns:1fr;gap:60px}.why-grid{gap:80px}.why-visual{order:-1}.visual-quote-card{padding:48px}.floating-badge{position:relative;bottom:auto;right:auto;margin:24px auto 0;width:fit-content}.industries-section{padding:100px 0}.industries-grid{grid-template-columns:repeat(3,1fr);gap:16px}.industry-card{padding:28px 16px}.industry-icon{font-size:2.25rem}.contact-section{padding:100px 0}.contact-grid{gap:60px}.contact-form-wrapper{padding:48px}.footer-grid{grid-template-columns:1fr 1fr;gap:48px 40px}.footer-brand{grid-column:1/-1}.footer-tagline{max-width:100%}.stat-divider{display:none}.stats-bar{padding:56px 0}.stats-grid{gap:40px}.stat-value{font-size:2.75rem}.stat-item{padding:12px 16px}.faq-grid{padding:0 20px}.cases-grid{grid-template-columns:1fr}.trusted-grid{grid-template-columns:repeat(2,1fr)}}        @media(max-width:768px){.trust-banner{font-size:.8125rem;padding:10px 16px}.trust-banner-content{gap:12px}.cookie-content{flex-direction:column;text-align:center}.cookie-text{min-width:auto}.cookie-buttons{width:100%;justify-content:center}.why-section{padding:100px 0}.why-grid{gap:60px}.why-lead{font-size:1.125rem;margin-bottom:32px}.feature{padding:20px;gap:16px}.feature:hover{transform:translateX(6px)}.feature-icon{width:48px;height:48px}.feature-content h4{font-size:1.125rem}.visual-quote-card{padding:36px 28px}.visual-quote-card blockquote{font-size:1.25rem;margin-bottom:28px}.quote-mark{font-size:5rem;top:16px;left:24px}.quote-author{padding-top:24px}.author-avatar{width:52px;height:52px;font-size:1.125rem}.industries-section{padding:80px 0}.industries-grid{grid-template-columns:repeat(2,1fr);gap:14px}.industry-card{padding:24px 16px}.industry-icon{font-size:2rem;margin-bottom:12px}.contact-section{padding:80px 0}.contact-lead{font-size:1.0625rem;margin-bottom:36px}.contact-details{gap:16px}.contact-item{padding:16px;gap:16px}.contact-icon{width:48px;height:48px}.contact-form-wrapper{padding:36px 28px}.form-row{grid-template-columns:1fr;gap:20px}.form-group input,.form-group select,.form-group textarea{padding:14px 16px}.services-section{padding:100px 0}.services-grid{grid-template-columns:1fr;gap:20px}.service-card{padding:36px 28px}.service-card h3{font-size:1.375rem}.service-icon{width:60px;height:60px}.service-badge{top:20px;right:20px;padding:6px 12px;font-size:.625rem}.hero{padding:140px 0 80px}.hero-title{font-size:clamp(2.25rem,8vw,3rem);letter-spacing:-.02em}.hero-badge{font-size:.75rem;padding:8px 16px;margin-bottom:28px}.hero-description{font-size:1.0625rem;line-height:1.7;margin-bottom:36px}.hero-cta{flex-direction:column;width:100%;gap:14px;margin-bottom:40px}.hero-cta .btn{width:100%;padding:16px 28px;font-size:1rem}.hero-trust{flex-direction:column;gap:16px;padding:20px 24px}.trust-avatars .avatar{width:44px;height:44px;font-size:.875rem}.footer-top{padding:72px 0 56px}.footer-grid{grid-template-columns:1fr;gap:40px}.footer-brand{grid-column:auto}.footer-links h4{margin-bottom:20px}.footer-bottom-content{flex-direction:column;gap:20px;text-align:center}.floating-badge{position:relative;bottom:auto;right:auto;margin-top:30px;justify-content:center}.cases-section{padding:100px 0}.faq-section{padding:100px 0}.faq-question{padding:20px 24px}.faq-question h4{font-size:1rem}.faq-answer-content{padding:0 24px 20px;font-size:.9375rem}.trusted-section{padding:60px 0}.trusted-grid{gap:16px}.trusted-logo{height:64px}.trusted-logo span{font-size:.8125rem}}
+        @media(max-width:480px){.services-section,.why-section,.contact-section,.cases-section,.faq-section{padding:80px 0}.container{padding:0 20px}.nav-container{padding:0 20px}.logo-icon{width:40px;height:40px;font-size:1.5rem}.logo-text{font-size:1.25rem}.nav-menu{width:90%;max-width:none;padding:90px 24px 32px}.section-header{margin-bottom:48px}.section-title{font-size:1.875rem}.section-subtitle{font-size:1rem}.service-card{padding:32px 24px}.service-card h3{font-size:1.25rem}.service-card p{font-size:1rem}.feature{flex-direction:column;gap:16px;text-align:center}.feature-icon{margin:0 auto}.feature:hover{transform:translateY(-4px)}.visual-quote-card{padding:32px 24px}.visual-quote-card blockquote{font-size:1.125rem}.quote-mark{font-size:4rem}.quote-author{flex-direction:column;text-align:center;gap:12px}.contact-section{padding:72px 0}.contact-form-wrapper{padding:28px 22px;border-radius:var(--radius-lg)}.contact-form{gap:20px}.contact-item:hover{transform:translateX(4px)}.footer-top{padding:60px 0 48px}.footer-grid{gap:32px}.footer-bottom{padding:24px 0}.hero-title{font-size:2rem}.stat-value{font-size:2rem}.case-card{padding:28px 20px}.case-result-value{font-size:1.625rem}.faq-question{padding:18px 20px}.faq-question h4{font-size:.9375rem}.faq-icon{width:28px;height:28px}.faq-answer-content{padding:0 20px 18px;font-size:.875rem}.trusted-grid{grid-template-columns:1fr}.trusted-logo{height:56px}.cookie-banner{padding:16px}.cookie-btn{padding:10px 20px;font-size:.875rem}}
+        @media(max-width:375px){.hero{padding:120px 0 60px}.hero-title{font-size:1.75rem}.hero-description{font-size:1rem}.contact-form-wrapper{padding:24px 18px}.case-card{padding:24px 18px}.case-tag{font-size:.625rem}.case-card h3{font-size:1.125rem}.faq-question h4{font-size:.875rem}.cookie-content{gap:16px}.cookie-text{font-size:.875rem}.cookie-buttons{flex-direction:column;width:100%}.cookie-btn{width:100%}}
     </style>
 </head>
 <body>
+    <!-- Trust Banner -->
+    <div class="trust-banner" id="trustBanner">
+        <div class="trust-banner-content">
+            <span>⭐ Rated 4.9/5 by 200+ UK Businesses — Limited onboarding slots available for Q2 2026</span>
+            <button class="trust-banner-close" id="trustBannerClose" aria-label="Dismiss banner">&times;</button>
+        </div>
+    </div>
+
+    <!-- Cookie Consent Banner -->
+    <div class="cookie-banner" id="cookieBanner">
+        <div class="cookie-content">
+            <p class="cookie-text">We use cookies to improve your experience. By continuing to use this site you agree to our <a href="#contact">cookie policy</a>.</p>
+            <div class="cookie-buttons">
+                <button class="cookie-btn cookie-btn-accept" id="cookieAccept">Accept</button>
+                <button class="cookie-btn cookie-btn-decline" id="cookieDecline">Decline</button>
+            </div>
+        </div>
+    </div>
+
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <a href="#" class="logo">
                 <div class="logo-icon">W</div>
                 <span class="logo-text">Whitmore & Associates</span>
             </a>
-            <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu"><span></span><span></span><span></span></button>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#services" class="nav-link">Services</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
@@ -267,6 +397,23 @@
                 <div class="stat-item"><div class="stat-value"><span>37</span></div><div class="stat-label">Years Experience</div></div>
                 <div class="stat-divider"></div>
                 <div class="stat-item"><div class="stat-value"><span>98</span>%</div><div class="stat-label">Client Retention</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trusted By Section -->
+    <section class="trusted-section">
+        <div class="container">
+            <div class="trusted-header">
+                <p>Trusted By Leading UK Businesses</p>
+            </div>
+            <div class="trusted-grid">
+                <div class="trusted-logo"><span>Harrington Group</span></div>
+                <div class="trusted-logo"><span>Westbury Holdings</span></div>
+                <div class="trusted-logo"><span>Thornfield Ltd</span></div>
+                <div class="trusted-logo"><span>Bramwell Partners</span></div>
+                <div class="trusted-logo"><span>Ashford & Co</span></div>
+                <div class="trusted-logo"><span>Charterhouse Capital</span></div>
             </div>
         </div>
     </section>
@@ -315,6 +462,67 @@
                     <h3>Bookkeeping</h3>
                     <p>Accurate, timely bookkeeping with real-time visibility into your financial position. Cloud-based and always current.</p>
                     <a href="#contact" class="service-link">Learn more →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Case Studies Section -->
+    <section class="cases-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-eyebrow">Client Results</div>
+                <h2 class="section-title">Real Results for Real Businesses</h2>
+                <p class="section-subtitle">See how we've helped UK businesses achieve measurable financial outcomes.</p>
+            </div>
+            <div class="cases-grid">
+                <div class="case-card">
+                    <span class="case-tag">Technology Startup</span>
+                    <h3>Complex R&D Tax Credit Claims</h3>
+                    <div class="case-challenge">
+                        <p class="case-challenge-label">Challenge</p>
+                        <p class="case-challenge-text">Complex R&D tax credit claims requiring detailed technical documentation.</p>
+                    </div>
+                    <div class="case-result">
+                        <p class="case-result-value">£127,000</p>
+                        <p class="case-result-label">R&D tax credit recovered</p>
+                    </div>
+                    <div class="case-timeframe">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span>6 weeks</span>
+                    </div>
+                </div>
+                <div class="case-card">
+                    <span class="case-tag">Property Investment</span>
+                    <h3>Multi-Property CGT Planning</h3>
+                    <div class="case-challenge">
+                        <p class="case-challenge-label">Challenge</p>
+                        <p class="case-challenge-text">Multi-property CGT planning across a portfolio of 12 residential properties.</p>
+                    </div>
+                    <div class="case-result">
+                        <p class="case-result-value">£84,000</p>
+                        <p class="case-result-label">Tax saved through restructuring</p>
+                    </div>
+                    <div class="case-timeframe">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span>3 months</span>
+                    </div>
+                </div>
+                <div class="case-card">
+                    <span class="case-tag">Professional Services</span>
+                    <h3>Scaling from £2M to £8M</h3>
+                    <div class="case-challenge">
+                        <p class="case-challenge-label">Challenge</p>
+                        <p class="case-challenge-text">Scaling operations from £2M to £8M turnover with improved financial controls.</p>
+                    </div>
+                    <div class="case-result">
+                        <p class="case-result-value">23%</p>
+                        <p class="case-result-label">Cost reduction via CFO Advisory</p>
+                    </div>
+                    <div class="case-timeframe">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span>12 months</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -380,6 +588,97 @@
         </div>
     </section>
 
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-eyebrow">FAQ</div>
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-subtitle">Everything you need to know about working with Whitmore & Associates.</p>
+            </div>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <h4>What size businesses do you work with?</h4>
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            We work with businesses from £500k to £50M+ annual turnover across all sectors in the UK. Our services are tailored to the specific needs of growing businesses.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <h4>How quickly can you onboard a new client?</h4>
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            We can typically onboard new clients within 5–7 business days of our initial discovery call. This includes setting up your secure client portal and beginning the information gathering process.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <h4>Do you offer fixed-fee pricing?</h4>
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Yes. We believe in transparent, fixed-fee pricing with no hidden costs. Your fee is agreed upfront based on the scope of work, so you'll never receive unexpected bills.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <h4>Can I switch from my current accountant?</h4>
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            Absolutely. We handle the entire transition process for you, including communicating with your previous accountant and ensuring a smooth handover of all records and information.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <h4>Do you work with startups?</h4>
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            We work with established businesses primarily, but do consider high-growth startups with turnover over £500k. Our expertise is best suited to businesses with established operations.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <h4>What industries do you specialise in?</h4>
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            We work across Professional Services, Technology, Real Estate, Manufacturing, Retail and E-commerce. Our diverse experience allows us to bring best practices from multiple sectors.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="contact" class="contact-section">
         <div class="container">
             <div class="contact-grid">
@@ -421,40 +720,49 @@
                     <form class="contact-form" id="contactForm">
                         <div class="form-row">
                             <div class="form-group">
-                                <label>First Name</label>
-                                <input type="text" placeholder="John" required>
+                                <label>First Name <span class="required">*</span></label>
+                                <input type="text" name="firstName" placeholder="John" required>
+                                <span class="form-error">Please enter your first name</span>
                             </div>
                             <div class="form-group">
-                                <label>Last Name</label>
-                                <input type="text" placeholder="Smith" required>
+                                <label>Last Name <span class="required">*</span></label>
+                                <input type="text" name="lastName" placeholder="Smith" required>
+                                <span class="form-error">Please enter your last name</span>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Email Address</label>
-                            <input type="email" placeholder="john@company.com" required>
+                            <label>Email Address <span class="required">*</span></label>
+                            <input type="email" name="email" placeholder="john@company.com" required>
+                            <span class="form-error">Please enter a valid email address</span>
                         </div>
                         <div class="form-group">
                             <label>Company Name</label>
-                            <input type="text" placeholder="Acme Ltd">
+                            <input type="text" name="company" placeholder="Acme Ltd">
                         </div>
                         <div class="form-group">
-                            <label>Service Interest</label>
+                            <label>Service Interest <span class="required">*</span></label>
                             <div class="select-wrapper">
-                                <select>
+                                <select name="serviceInterest" required>
                                     <option value="">Select a service...</option>
-                                    <option value="tax">Tax Planning</option>
-                                    <option value="cfo">CFO Advisory</option>
-                                    <option value="compliance">Compliance</option>
-                                    <option value="bookkeeping">Bookkeeping</option>
+                                    <option value="Tax Planning">Tax Planning</option>
+                                    <option value="CFO Advisory">CFO Advisory</option>
+                                    <option value="Compliance">Compliance</option>
+                                    <option value="Bookkeeping">Bookkeeping</option>
                                 </select>
                                 <svg class="select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                             </div>
+                            <span class="form-error">Please select a service</span>
                         </div>
                         <div class="form-group">
-                            <label>How can we help?</label>
-                            <textarea rows="4" placeholder="Tell us about your business..."></textarea>
+                            <label>How can we help? <span class="required">*</span></label>
+                            <textarea name="message" rows="4" placeholder="Tell us about your business..." required></textarea>
+                            <span class="form-error">Please enter your message</span>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-full">Send Enquiry</button>
+                        <div class="form-submit-wrapper">
+                            <button type="submit" class="btn btn-primary btn-full">Send Enquiry</button>
+                            <div class="form-success" id="formSuccess">Thank you! We'll be in touch within 1 business day.</div>
+                            <div class="form-error-message" id="formError">Something went wrong. Please try again or call us directly.</div>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -521,48 +829,158 @@
 
     <script src="chat.js"></script>
     <script>
+        // Trust Banner
+        (function() {
+            const trustBanner = document.getElementById('trustBanner');
+            const trustBannerClose = document.getElementById('trustBannerClose');
+            const isDismissed = localStorage.getItem('whitmore_trust_banner_dismissed');
+            
+            if (isDismissed) {
+                trustBanner.classList.add('hidden');
+                document.body.classList.remove('has-trust-banner');
+            } else {
+                document.body.classList.add('has-trust-banner');
+            }
+            
+            trustBannerClose.addEventListener('click', function() {
+                trustBanner.classList.add('hidden');
+                document.body.classList.remove('has-trust-banner');
+                localStorage.setItem('whitmore_trust_banner_dismissed', 'true');
+            });
+        })();
+        
+        // Cookie Consent
+        (function() {
+            const cookieBanner = document.getElementById('cookieBanner');
+            const cookieAccept = document.getElementById('cookieAccept');
+            const cookieDecline = document.getElementById('cookieDecline');
+            const cookieConsent = localStorage.getItem('whitmore_cookie_consent');
+            
+            if (!cookieConsent) {
+                setTimeout(function() {
+                    cookieBanner.classList.add('show');
+                }, 2000);
+            }
+            
+            cookieAccept.addEventListener('click', function() {
+                localStorage.setItem('whitmore_cookie_consent', 'accepted');
+                cookieBanner.classList.remove('show');
+            });
+            
+            cookieDecline.addEventListener('click', function() {
+                localStorage.setItem('whitmore_cookie_consent', 'declined');
+                cookieBanner.classList.remove('show');
+            });
+        })();
+        
+        // Navigation
         var navToggle = document.getElementById('navToggle');
         var navMenu = document.getElementById('navMenu');
         navToggle.addEventListener('click',function(){navMenu.classList.toggle('active');this.classList.toggle('active')});
         navMenu.querySelectorAll('a').forEach(function(link){link.addEventListener('click',function(){navMenu.classList.remove('active');navToggle.classList.remove('active')})});
         window.addEventListener('scroll',function(){const n=document.getElementById('navbar');if(window.scrollY>50){n.classList.add('scrolled')}else{n.classList.remove('scrolled')}});
+        
+        // FAQ Accordion
+        (function() {
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(function(item) {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', function() {
+                    const isActive = item.classList.contains('active');
+                    // Close all
+                    faqItems.forEach(function(i) {
+                        i.classList.remove('active');
+                        i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                    });
+                    // Open clicked if it wasn't active
+                    if (!isActive) {
+                        item.classList.add('active');
+                        question.setAttribute('aria-expanded', 'true');
+                    }
+                });
+            });
+        })();
+        
+        // Contact Form
         document.getElementById('contactForm').addEventListener('submit',function(e){
             e.preventDefault();
             var form = this;
-            var inputs = form.querySelectorAll('input, select, textarea');
-            var firstName = inputs[0].value;
-            var lastName = inputs[1].value;
-            var email = inputs[2].value;
-            var company = inputs[3].value;
-            var service = inputs[4].value;
-            var message = inputs[5].value;
             var submitBtn = form.querySelector('button[type="submit"]');
+            var formSuccess = document.getElementById('formSuccess');
+            var formError = document.getElementById('formError');
+            
+            // Reset messages
+            formSuccess.classList.remove('show');
+            formError.classList.remove('show');
+            
+            // Validate
+            var isValid = true;
+            var requiredFields = form.querySelectorAll('[required]');
+            requiredFields.forEach(function(field) {
+                var errorEl = field.parentNode.querySelector('.form-error');
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.classList.add('error');
+                    if (errorEl) errorEl.classList.add('show');
+                } else {
+                    field.classList.remove('error');
+                    if (errorEl) errorEl.classList.remove('show');
+                }
+            });
+            
+            // Email validation
+            var emailField = form.querySelector('input[type="email"]');
+            if (emailField && emailField.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField.value)) {
+                isValid = false;
+                emailField.classList.add('error');
+                emailField.parentNode.querySelector('.form-error').classList.add('show');
+            }
+            
+            if (!isValid) return;
+            
+            // Prepare payload
+            var payload = {
+                source: 'contact_form',
+                contact: {
+                    first_name: form.querySelector('input[name="firstName"]').value,
+                    last_name: form.querySelector('input[name="lastName"]').value,
+                    email: form.querySelector('input[name="email"]').value,
+                    company: form.querySelector('input[name="company"]').value,
+                    service_interest: form.querySelector('select[name="serviceInterest"]').value
+                },
+                message: form.querySelector('textarea[name="message"]').value,
+                session_id: localStorage.getItem('whitmore_chat_session_id') || ('form_' + Date.now()),
+                timestamp: new Date().toISOString()
+            };
+            
+            // Show loading
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Sending...';
-            fetch('https://n8n-i9k0.srv1519780.hstgr.cloud/webhook/intake-chat', {
+            submitBtn.classList.add('btn-loading');
+            
+            // Submit
+            fetch('https://n8n-i9k0.srv1519780.hstgr.cloud/webhook/whitmore-intake', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    source: 'contact_form',
-                    session_id: 'form_' + Date.now(),
-                    message: message,
-                    conversation_history: [],
-                    contact: {
-                        first_name: firstName,
-                        last_name: lastName,
-                        email: email,
-                        company: company,
-                        service_interest: service
-                    }
-                })
-            }).then(function(){
+                body: JSON.stringify(payload)
+            }).then(function(response){
+                if (!response.ok) throw new Error('Network error');
+                submitBtn.classList.remove('btn-loading');
                 submitBtn.textContent = 'Enquiry Sent!';
+                formSuccess.classList.add('show');
                 form.reset();
-                setTimeout(function(){ submitBtn.disabled = false; submitBtn.textContent = 'Send Enquiry'; }, 4000);
-            }).catch(function(){
+                setTimeout(function(){ 
+                    submitBtn.disabled = false; 
+                    submitBtn.textContent = 'Send Enquiry'; 
+                    formSuccess.classList.remove('show');
+                }, 4000);
+            }).catch(function(error){
+                console.error('Form error:', error);
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Send Enquiry';
-                alert('Something went wrong. Please try again or call us directly.');
+                submitBtn.classList.remove('btn-loading');
+                formError.classList.add('show');
+                setTimeout(function(){
+                    formError.classList.remove('show');
+                }, 5000);
             });
         });
     </script>

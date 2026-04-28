@@ -3,7 +3,7 @@
     
     const CONFIG = {
         N8N_WEBHOOK_URL: "https://n8n-i9k0.srv1519780.hstgr.cloud/webhook/whitmore-intake",
-        CALENDLY_LINK: "https://calendly.com/its-kunalrathod/30min",
+        CALENDLY_LINK: "https://calendly.com/whitmore-associates",
         COMPANY_NAME: "Whitmore & Associates",
         COMPANY_SUBTITLE: "New Client Enquiry"
     };
@@ -14,16 +14,51 @@
         conversationHistory: [],
         isTyping: false,
         qualificationComplete: false,
-        hasStarted: false
+        hasStarted: false,
+        userEmail: null,
+        exitIntentTriggered: false
     };
 
     let elements = {};
 
+    function generateUUID() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
     function init() {
+        // Restore session from localStorage
+        const storedSessionId = localStorage.getItem('whitmore_chat_session_id');
+        const storedHistory = localStorage.getItem('whitmore_chat_history');
+        const storedEmail = localStorage.getItem('whitmore_chat_email');
+        
+        if (storedSessionId) {
+            state.sessionId = storedSessionId;
+        } else {
+            state.sessionId = generateUUID();
+            localStorage.setItem('whitmore_chat_session_id', state.sessionId);
+        }
+        
+        if (storedHistory) {
+            try {
+                state.conversationHistory = JSON.parse(storedHistory);
+            } catch(e) {
+                state.conversationHistory = [];
+            }
+        }
+        
+        if (storedEmail) {
+            state.userEmail = storedEmail;
+        }
+
         createWidget();
         cacheElements();
         bindEvents();
-        state.sessionId = "wa_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
+        
+        // Restore conversation messages if any
+        restoreConversation();
         
         setTimeout(() => {
             if (!state.isOpen) {
@@ -31,6 +66,57 @@
                 setTimeout(hideNotification, 8000);
             }
         }, 4000);
+        
+        // Setup exit intent
+        setupExitIntent();
+    }
+
+    function restoreConversation() {
+        if (state.conversationHistory.length > 0) {
+            state.conversationHistory.forEach(msg => {
+                if (msg.sender !== 'system') {
+                    appendRestoredMessage(msg.text, msg.sender, msg.timestamp);
+                }
+            });
+        }
+    }
+
+    function appendRestoredMessage(text, sender, timestamp) {
+        const msgDiv = document.createElement("div");
+        msgDiv.className = "chat-message " + sender;
+        const time = new Date(timestamp).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+        const initial = sender === "user" ? "You" : "W";
+        msgDiv.innerHTML = '<div class="message-avatar"><span>' + initial + '</span></div>' +
+            '<div class="message-content"><div class="message-bubble"><p>' + escapeHtml(text) + '</p></div>' +
+            '<span class="message-time">' + time + '</span></div>';
+        elements.messages.appendChild(msgDiv);
+        elements.messages.scrollTop = elements.messages.scrollHeight;
+    }
+
+    function setupExitIntent() {
+        // Exit intent detection - triggered when mouse moves toward top of page (closing tab)
+        document.addEventListener('mouseleave', function(e) {
+            if (e.clientY <= 0 && !state.exitIntentTriggered && !state.isOpen) {
+                state.exitIntentTriggered = true;
+                showExitIntentMessage();
+            }
+        });
+        
+        // Also detect when user scrolls up quickly near top
+        let lastScrollY = window.scrollY;
+        window.addEventListener('scroll', function() {
+            const currentScrollY = window.scrollY;
+            if (currentScrollY < lastScrollY && currentScrollY < 100 && !state.exitIntentTriggered && !state.isOpen) {
+                state.exitIntentTriggered = true;
+                showExitIntentMessage();
+            }
+            lastScrollY = currentScrollY;
+        }, { passive: true });
+    }
+
+    function showExitIntentMessage() {
+        openChat();
+        addMessage("Before you go — can I help answer any questions about our services?", "ai");
     }
 
     function createWidget() {
@@ -46,9 +132,10 @@
                         <button class="notification-close" id="notificationClose">&times;</button>
                     </div>
                 </div>
-                <button class="chat-toggle" id="chatToggle">
-                    <span class="toggle-text">Talk to our intake team</span>
-                    <span class="toggle-arrow">&rarr;</span>
+                <button class="chat-toggle" id="chatToggle" aria-label="Open chat">
+                    <svg class="chat-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                    </svg>
                     <div class="toggle-pulse"></div>
                 </button>
                 <div class="chat-panel" id="chatPanel">
@@ -64,8 +151,8 @@
                             </div>
                         </div>
                         <div class="chat-header-actions">
-                            <button class="chat-action" id="chatMinimize">&minus;</button>
-                            <button class="chat-action" id="chatClose">&times;</button>
+                            <button class="chat-action" id="chatMinimize" aria-label="Minimize chat">&minus;</button>
+                            <button class="chat-action" id="chatClose" aria-label="Close chat">&times;</button>
                         </div>
                     </div>
                     <div class="chat-subheader">
@@ -78,6 +165,7 @@
                                 <div class="message-bubble">
                                     <p>Hello! Welcome to Whitmore & Associates.</p>
                                     <p>I'm here to understand your business needs and see how we can help you grow.</p>
+                                    <p>What's your email address so I can follow up with you?</p>
                                 </div>
                                 <span class="message-time">Just now</span>
                             </div>
@@ -111,7 +199,7 @@
                         <div class="chat-input-wrapper">
                             <input type="text" class="chat-input" id="chatInput" 
                                    placeholder="Type your message..." maxlength="500" autocomplete="off">
-                            <button class="chat-send" id="chatSend">&#10148;</button>
+                            <button class="chat-send" id="chatSend" aria-label="Send message">&#10148;</button>
                         </div>
                         <div class="input-hint">Your information is secure and confidential</div>
                     </div>
@@ -140,16 +228,14 @@
             .notification-message { font-size: .8125rem; color: #64748b; line-height: 1.5; }
             .notification-close { background: rgba(15,23,42,.05); border: none; color: #94a3b8; font-size: 1.25rem; cursor: pointer; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all .2s ease; }
             .notification-close:hover { background: rgba(15,23,42,.1); color: #0f172a; transform: rotate(90deg); }
-            .chat-toggle { display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg,#0f172a 0,#1e293b 100%); color: #fff; border: none; padding: 18px 28px; border-radius: 50px; font-family: inherit; font-size: .9375rem; font-weight: 600; cursor: pointer; box-shadow: 0 12px 40px -8px rgba(15,23,42,.4), 0 4px 12px rgba(15,23,42,.2); transition: all .3s cubic-bezier(.4,0,.2,1); position: relative; overflow: hidden; }
-            .chat-toggle::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg,rgba(255,255,255,.1) 0,transparent 50%); opacity: 0; transition: opacity .3s ease; }
+            .chat-toggle { display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; background: linear-gradient(135deg,#c9a227 0,#d4b43a 100%); color: #0f172a; border: none; border-radius: 50%; cursor: pointer; box-shadow: 0 8px 32px rgba(201,162,39,.4), 0 4px 12px rgba(201,162,39,.2); transition: all .3s cubic-bezier(.4,0,.2,1); position: relative; overflow: hidden; }
+            .chat-toggle::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg,rgba(255,255,255,.2) 0,transparent 50%); opacity: 0; transition: opacity .3s ease; }
             .chat-toggle:hover::before { opacity: 1; }
-            .chat-toggle:hover { transform: translateY(-3px); box-shadow: 0 18px 50px -10px rgba(15,23,42,.5), 0 8px 20px rgba(15,23,42,.25); }
+            .chat-toggle:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 12px 40px rgba(201,162,39,.5), 0 8px 20px rgba(201,162,39,.25); }
             .chat-toggle.hidden { opacity: 0; transform: scale(.8); pointer-events: none; }
-            .toggle-text { position: relative; z-index: 1; }
-            .toggle-arrow { position: relative; z-index: 1; transition: transform .3s ease; }
-            .chat-toggle:hover .toggle-arrow { transform: translateX(4px); }
-            .toggle-pulse { position: absolute; top: 50%; right: 22px; width: 10px; height: 10px; background: linear-gradient(135deg,#c9a227 0,#d4b43a 100%); border-radius: 50%; transform: translateY(-50%); animation: pulse-ring 2s ease-out infinite; box-shadow: 0 0 0 0 rgba(201,162,39,.7); }
-            @keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 rgba(201,162,39,.7); } 70% { box-shadow: 0 0 0 12px rgba(201,162,39,0); } 100% { box-shadow: 0 0 0 0 rgba(201,162,39,0); } }
+            .chat-toggle .chat-icon { position: relative; z-index: 1; }
+            .toggle-pulse { position: absolute; top: 50%; right: 50%; width: 10px; height: 10px; background: #0f172a; border-radius: 50%; transform: translate(50%,-50%); animation: pulse-ring 2s ease-out infinite; box-shadow: 0 0 0 0 rgba(15,23,42,.7); opacity: 0.3; }
+            @keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 rgba(15,23,42,.7); } 70% { box-shadow: 0 0 0 12px rgba(15,23,42,0); } 100% { box-shadow: 0 0 0 0 rgba(15,23,42,0); } }
             .chat-panel { position: absolute; bottom: 84px; right: 0; width: 420px; height: 640px; background: #fff; border-radius: 28px; box-shadow: 0 32px 80px -20px rgba(0,0,0,.35), 0 0 0 1px rgba(0,0,0,.04); display: flex; flex-direction: column; overflow: hidden; opacity: 0; transform: translateY(20px) scale(.95); visibility: hidden; transition: all .4s cubic-bezier(.4,0,.2,1); }
             .chat-panel.open { opacity: 1; transform: translateY(0) scale(1); visibility: visible; }
             .chat-header { background: linear-gradient(145deg,#0f172a 0,#1e293b 100%); color: #fff; padding: 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(201,162,39,.15); }
@@ -214,14 +300,29 @@
             .calendly-btn { display: inline-flex; align-items: center; gap: 8px; background: #0f172a; color: #fff; padding: 14px 28px; border-radius: 28px; font-weight: 600; font-size: .9375rem; text-decoration: none; transition: all .25s cubic-bezier(.4,0,.2,1); box-shadow: 0 4px 16px rgba(15,23,42,.2); }
             .calendly-btn:hover { background: #1e293b; transform: translateY(-3px); box-shadow: 0 10px 24px rgba(15,23,42,.25); }
             .calendly-btn:active { transform: translateY(-1px); }
-            @media(max-width:520px) {
-                .chat-widget { bottom: 16px; right: 16px; left: 16px; }
-                .chat-toggle { width: 100%; justify-content: center; padding: 16px 24px; }
-                .chat-panel { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; border-radius: 0; }
-                .chat-notification { width: calc(100vw - 32px); right: 0; left: 0; margin: 0 auto; bottom: 76px; }
-                .message-content { max-width: calc(100vw - 100px); }
-                .quick-actions { padding: 0 16px; }
+            
+            @media(max-width: 768px) {
+                .chat-widget { bottom: 20px; right: 20px; }
+                .chat-panel { width: calc(100vw - 40px); height: 70vh; max-height: 600px; border-radius: 20px; }
+                .chat-toggle { width: 56px; height: 56px; }
+                .message-content { max-width: 260px; }
+                .quick-actions { padding: 0 16px; grid-template-columns: 1fr; }
                 .calendly-card { margin: 0 16px; }
+            }
+            
+            @media(max-width: 480px) {
+                .chat-widget { bottom: 16px; right: 16px; left: auto; }
+                .chat-panel { width: calc(100vw - 32px); right: 0; border-radius: 16px; }
+                .message-content { max-width: calc(100vw - 120px); }
+                .chat-notification { width: calc(100vw - 32px); right: 0; }
+            }
+            
+            @media(max-width: 375px) {
+                .chat-panel { height: 75vh; }
+                .chat-header { padding: 16px; }
+                .chat-subheader { padding: 10px 16px; }
+                .chat-messages { padding: 16px; }
+                .chat-input-area { padding: 16px; }
             }
         `;
     }
@@ -265,14 +366,19 @@
     function toggleChat() {
         state.isOpen = !state.isOpen;
         if (state.isOpen) {
-            elements.panel.classList.add("open");
-            elements.toggle.classList.add("hidden");
-            hideNotification();
-            setTimeout(function() { elements.input.focus(); }, 300);
-            if (!state.hasStarted) state.hasStarted = true;
+            openChat();
         } else {
             closeChat();
         }
+    }
+
+    function openChat() {
+        state.isOpen = true;
+        elements.panel.classList.add("open");
+        elements.toggle.classList.add("hidden");
+        hideNotification();
+        setTimeout(function() { elements.input.focus(); }, 300);
+        if (!state.hasStarted) state.hasStarted = true;
     }
 
     function closeChat() {
@@ -297,16 +403,61 @@
         }
     }
 
+    function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
     function handleQuickAction(text) {
         addMessage(text, "user");
+        
+        // Check if this looks like an email
+        if (isValidEmail(text) && !state.userEmail) {
+            state.userEmail = text;
+            localStorage.setItem('whitmore_chat_email', text);
+        }
+        
         if (elements.quickActions) {
             elements.quickActions.style.display = "none";
         }
         showTyping();
         
-        setTimeout(function() {
-            processResponse(text);
-        }, 1500);
+        // Send to N8N webhook
+        sendToWebhook(text);
+    }
+
+    function sendToWebhook(message) {
+        const payload = {
+            source: "chat",
+            session_id: state.sessionId,
+            email: state.userEmail || null,
+            message: message,
+            timestamp: new Date().toISOString()
+        };
+
+        fetch(CONFIG.N8N_WEBHOOK_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        })
+        .then(function(r) { 
+            if (!r.ok) throw new Error('Network response was not ok');
+            return r.json(); 
+        })
+        .then(function(data) {
+            hideTyping();
+            
+            if (data.qualificationComplete || data.calendly) {
+                state.qualificationComplete = true;
+                showCalendlyCard(data.message || "Based on what you've shared, we'd love to speak with you.");
+            } else {
+                addMessage(data.message || data.response || "Thank you for your message. We'll get back to you shortly.", "ai");
+            }
+        })
+        .catch(function(error) {
+            hideTyping();
+            console.error('Chat error:', error);
+            addMessage("I apologize, but I'm having trouble connecting right now. Please contact us directly at enquiries@whitmoreassociates.co.uk", "ai");
+        });
     }
 
     function addMessage(text, sender) {
@@ -319,7 +470,12 @@
             '<span class="message-time">' + time + '</span></div>';
         elements.messages.appendChild(msgDiv);
         elements.messages.scrollTop = elements.messages.scrollHeight;
-        state.conversationHistory.push({ sender: sender, text: text, timestamp: new Date() });
+        
+        const msgData = { sender: sender, text: text, timestamp: new Date().toISOString() };
+        state.conversationHistory.push(msgData);
+        
+        // Persist to localStorage
+        localStorage.setItem('whitmore_chat_history', JSON.stringify(state.conversationHistory));
     }
 
     function showTyping() {
@@ -333,60 +489,13 @@
         elements.typing.classList.remove("show");
     }
 
-    function processResponse(userMessage) {
-        hideTyping();
-        
-        if (CONFIG.N8N_WEBHOOK_URL.includes("your-n8n")) {
-            const userMsgCount = state.conversationHistory.filter(function(m) { return m.sender === "user"; }).length;
-            
-            if (userMsgCount >= 4 && !state.qualificationComplete) {
-                state.qualificationComplete = true;
-                showCalendlyCard();
-                return;
-            }
-            
-            const responses = [
-                "Thank you for your interest! To help us understand your needs better, could you tell me about your company size?",
-                "Great! What specific accounting challenges are you currently facing?",
-                "Thank you for sharing that. Based on what you've told me, our CFO Advisory service could be a perfect fit.",
-                "Would you like to schedule a free consultation with one of our partners?"
-            ];
-            const response = responses[Math.min(userMsgCount - 1, 3)];
-            addMessage(response, "ai");
-        } else {
-            fetch(CONFIG.N8N_WEBHOOK_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    message: userMessage,
-                    session_id: state.sessionId,
-                    conversation_history: state.conversationHistory,
-                    source: "chat",
-                    timestamp: new Date().toISOString()
-                })
-            })
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
-                if (data.calendly || data.qualificationComplete) {
-                    state.qualificationComplete = true;
-                    showCalendlyCard(data.message);
-                } else {
-                    addMessage(data.message || data.response || "Thank you for your message. We'll get back to you shortly.", "ai");
-                }
-            })
-            .catch(function() {
-                addMessage("I apologize, but I'm having trouble connecting right now. Please contact us directly at enquiries@whitmoreassociates.co.uk", "ai");
-            });
-        }
-    }
-
     function showCalendlyCard(customMessage) {
         const cardDiv = document.createElement("div");
         cardDiv.innerHTML = '<div class="calendly-card">' +
             '<div class="calendly-icon">&#128197;</div>' +
             '<h4>Thank You!</h4>' +
             '<p>' + (customMessage || "Based on what you've shared, we'd love to speak with you.") + '</p>' +
-            '<a href="' + CONFIG.CALENDLY_LINK + '" target="_blank" class="calendly-btn">Schedule a Call &rarr;</a>' +
+            '<a href="' + CONFIG.CALENDLY_LINK + '" target="_blank" rel="noopener noreferrer" class="calendly-btn">Schedule a Call &rarr;</a>' +
             '</div>';
         elements.messages.appendChild(cardDiv.firstElementChild);
         elements.messages.scrollTop = elements.messages.scrollHeight;
@@ -398,15 +507,21 @@
         return div.innerHTML;
     }
 
+    // Public API
     window.WhitmoreChat = {
-        open: function() { if (!state.isOpen) toggleChat(); },
+        open: openChat,
         close: closeChat,
         toggle: toggleChat,
         sendMessage: function(msg) { if (state.isOpen) handleQuickAction(msg); },
         getHistory: function() { return state.conversationHistory; },
         clearHistory: function() { 
             state.conversationHistory = []; 
-            elements.messages.innerHTML = ""; 
+            localStorage.removeItem('whitmore_chat_history');
+            elements.messages.innerHTML = ''; 
+        },
+        triggerExitIntent: function() {
+            state.exitIntentTriggered = true;
+            showExitIntentMessage();
         }
     };
 
