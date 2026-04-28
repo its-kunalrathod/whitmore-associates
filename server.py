@@ -9,7 +9,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         super().end_headers()
 
-os.chdir(r'D:\whitmore-associates')
+os.chdir(r'D:\Projects\whitmore-associates')
 
 with socketserver.TCPServer(("", PORT), Handler) as httpd:
     print(f"Serving at http://localhost:{PORT}")
