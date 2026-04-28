@@ -98,8 +98,12 @@
         msgDiv.className = "chat-message " + sender;
         const time = new Date(timestamp).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
         const initial = sender === "user" ? "You" : "W";
+
+        // Format message based on sender (same logic as addMessage)
+        const formattedText = sender === "ai" ? formatMessage(text) : escapeHtml(text);
+
         msgDiv.innerHTML = '<div class="message-avatar"><span>' + initial + '</span></div>' +
-            '<div class="message-content"><div class="message-bubble"><p>' + escapeHtml(text) + '</p></div>' +
+            '<div class="message-content"><div class="message-bubble">' + formattedText + '</div>' +
             '<span class="message-time">' + time + '</span></div>';
         elements.messages.appendChild(msgDiv);
         elements.messages.scrollTop = elements.messages.scrollHeight;
@@ -278,6 +282,12 @@
             .chat-message.user .message-bubble { background: linear-gradient(145deg,#0f172a 0,#1e293b 100%); color: #fff; border-bottom-right-radius: 6px; }
             .message-bubble p { margin-bottom: 10px; }
             .message-bubble p:last-child { margin-bottom: 0; }
+            .message-bubble ul { margin: 10px 0; padding-left: 20px; }
+            .message-bubble ul li { margin-bottom: 6px; line-height: 1.5; }
+            .message-bubble ul li:last-child { margin-bottom: 0; }
+            .message-bubble strong { font-weight: 600; }
+            .chat-message.ai .message-bubble strong { color: #0f172a; }
+            .chat-message.user .message-bubble strong { color: #fff; font-weight: 600; }
             .message-time { font-size: .6875rem; color: #94a3b8; padding: 0 4px; font-weight: 500; }
             .chat-message.user .message-time { text-align: right; }
             .welcome-message .message-bubble { background: linear-gradient(135deg,#f5f0e1 0,#faf9f7 100%); border: 1.5px solid rgba(201,162,39,.2); }
@@ -494,8 +504,14 @@
         msgDiv.className = "chat-message " + sender;
         const time = new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
         const initial = sender === "user" ? "You" : "W";
+
+        // Format message based on sender
+        // AI messages: format markdown to HTML (trusted source from N8N)
+        // User messages: escape HTML to prevent XSS
+        const formattedText = sender === "ai" ? formatMessage(text) : escapeHtml(text);
+
         msgDiv.innerHTML = '<div class="message-avatar"><span>' + initial + '</span></div>' +
-            '<div class="message-content"><div class="message-bubble"><p>' + escapeHtml(text) + '</p></div>' +
+            '<div class="message-content"><div class="message-bubble">' + formattedText + '</div>' +
             '<span class="message-time">' + time + '</span></div>';
         elements.messages.appendChild(msgDiv);
         elements.messages.scrollTop = elements.messages.scrollHeight;
@@ -538,6 +554,47 @@
         const div = document.createElement("div");
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    function formatMessage(text) {
+        // Bold
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+        // Bullet points - convert markdown list items to HTML list
+        const lines = text.split('\n');
+        const result = [];
+        let inList = false;
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            const listMatch = line.match(/^- (.+)$/);
+
+            if (listMatch) {
+                if (!inList) {
+                    result.push('<ul>');
+                    inList = true;
+                }
+                result.push('<li>' + listMatch[1] + '</li>');
+            } else {
+                if (inList) {
+                    result.push('</ul>');
+                    inList = false;
+                }
+                result.push(line);
+            }
+        }
+
+        if (inList) {
+            result.push('</ul>');
+        }
+
+        text = result.join('\n');
+
+        // Line breaks
+        text = text.replace(/\n\n/g, '<br><br>');
+        text = text.replace(/\n/g, '<br>');
+
+        return text;
     }
 
     // Public API
