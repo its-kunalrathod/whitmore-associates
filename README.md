@@ -67,3 +67,4 @@ Replace with your actual n8n webhook URL.
 | vercel.json | 0.6 KB | Routing configuration |
 
 **Total: ~77 KB** - Optimized for fast loading
+# Cache bust Tue Apr 28 04:55:58 EDT 2026
