@@ -30,17 +30,29 @@
 
     function init() {
         // Restore session from localStorage
-        const storedSessionId = localStorage.getItem('whitmore_chat_session_id');
-        const storedHistory = localStorage.getItem('whitmore_chat_history');
-        const storedEmail = localStorage.getItem('whitmore_chat_email');
-        
+        let storedSessionId = null;
+        let storedHistory = null;
+        let storedEmail = null;
+
+        try {
+            storedSessionId = localStorage.getItem('whitmore_chat_session_id');
+            storedHistory = localStorage.getItem('whitmore_chat_history');
+            storedEmail = localStorage.getItem('whitmore_chat_email');
+        } catch (e) {
+            console.warn('localStorage not available:', e);
+        }
+
         if (storedSessionId) {
             state.sessionId = storedSessionId;
         } else {
             state.sessionId = generateUUID();
-            localStorage.setItem('whitmore_chat_session_id', state.sessionId);
+            try {
+                localStorage.setItem('whitmore_chat_session_id', state.sessionId);
+            } catch (e) {
+                console.warn('Could not save session to localStorage:', e);
+            }
         }
-        
+
         if (storedHistory) {
             try {
                 state.conversationHistory = JSON.parse(storedHistory);
@@ -48,7 +60,7 @@
                 state.conversationHistory = [];
             }
         }
-        
+
         if (storedEmail) {
             state.userEmail = storedEmail;
         }
@@ -56,17 +68,17 @@
         createWidget();
         cacheElements();
         bindEvents();
-        
+
         // Restore conversation messages if any
         restoreConversation();
-        
+
         setTimeout(() => {
             if (!state.isOpen) {
                 showNotification();
                 setTimeout(hideNotification, 8000);
             }
         }, 4000);
-        
+
         // Setup exit intent
         setupExitIntent();
     }
@@ -409,18 +421,22 @@
 
     function handleQuickAction(text) {
         addMessage(text, "user");
-        
+
         // Check if this looks like an email
         if (isValidEmail(text) && !state.userEmail) {
             state.userEmail = text;
-            localStorage.setItem('whitmore_chat_email', text);
+            try {
+                localStorage.setItem('whitmore_chat_email', text);
+            } catch (e) {
+                console.warn('Could not save email to localStorage:', e);
+            }
         }
-        
+
         if (elements.quickActions) {
             elements.quickActions.style.display = "none";
         }
         showTyping();
-        
+
         // Send to N8N webhook
         sendToWebhook(text);
     }
@@ -434,18 +450,26 @@
             timestamp: new Date().toISOString()
         };
 
+        // Create an AbortController for timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(function() {
+            controller.abort();
+        }, 10000); // 10 second timeout
+
         fetch(CONFIG.N8N_WEBHOOK_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload),
+            signal: controller.signal
         })
-        .then(function(r) { 
+        .then(function(r) {
+            clearTimeout(timeoutId);
             if (!r.ok) throw new Error('Network response was not ok');
-            return r.json(); 
+            return r.json();
         })
         .then(function(data) {
             hideTyping();
-            
+
             if (data.qualificationComplete || data.calendly) {
                 state.qualificationComplete = true;
                 showCalendlyCard(data.message || "Based on what you've shared, we'd love to speak with you.");
@@ -454,9 +478,14 @@
             }
         })
         .catch(function(error) {
+            clearTimeout(timeoutId);
             hideTyping();
             console.error('Chat error:', error);
-            addMessage("I apologize, but I'm having trouble connecting right now. Please contact us directly at enquiries@whitmoreassociates.co.uk", "ai");
+            if (error.name === 'AbortError') {
+                addMessage("I'm sorry, the request timed out. Please try again or contact us directly at enquiries@whitmoreassociates.co.uk", "ai");
+            } else {
+                addMessage("I apologize, but I'm having trouble connecting right now. Please contact us directly at enquiries@whitmoreassociates.co.uk", "ai");
+            }
         });
     }
 
@@ -470,12 +499,16 @@
             '<span class="message-time">' + time + '</span></div>';
         elements.messages.appendChild(msgDiv);
         elements.messages.scrollTop = elements.messages.scrollHeight;
-        
+
         const msgData = { sender: sender, text: text, timestamp: new Date().toISOString() };
         state.conversationHistory.push(msgData);
-        
+
         // Persist to localStorage
-        localStorage.setItem('whitmore_chat_history', JSON.stringify(state.conversationHistory));
+        try {
+            localStorage.setItem('whitmore_chat_history', JSON.stringify(state.conversationHistory));
+        } catch (e) {
+            console.warn('Could not save chat history to localStorage:', e);
+        }
     }
 
     function showTyping() {
@@ -514,10 +547,14 @@
         toggle: toggleChat,
         sendMessage: function(msg) { if (state.isOpen) handleQuickAction(msg); },
         getHistory: function() { return state.conversationHistory; },
-        clearHistory: function() { 
-            state.conversationHistory = []; 
-            localStorage.removeItem('whitmore_chat_history');
-            elements.messages.innerHTML = ''; 
+        clearHistory: function() {
+            state.conversationHistory = [];
+            try {
+                localStorage.removeItem('whitmore_chat_history');
+            } catch (e) {
+                console.warn('Could not clear chat history from localStorage:', e);
+            }
+            elements.messages.innerHTML = '';
         },
         triggerExitIntent: function() {
             state.exitIntentTriggered = true;
